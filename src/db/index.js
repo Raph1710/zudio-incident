@@ -15,4 +15,10 @@ pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err)
 })
 
+const originalQuery = pool.query.bind(pool)
+pool.query = (text, params) => {
+  if (req && req._queryCount !== undefined) req._queryCount++
+  return originalQuery(text, params)
+}
+
 module.exports = pool
